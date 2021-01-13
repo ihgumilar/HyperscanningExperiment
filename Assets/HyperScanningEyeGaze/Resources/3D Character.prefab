@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!65 &3334716337729267484
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2310926520597322237}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.10593429, y: 0.24999079, z: 0.2867311}
+  m_Center: {x: 0.007300742, y: -0.015315883, z: 0.043043163}
 --- !u!1 &7832854617684493064
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,6 +342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7910638214012275376}
   - component: {fileID: 7800225692099120522}
+  - component: {fileID: 8463758873684073416}
   m_Layer: 0
   m_Name: Teeth
   m_TagString: Untagged
@@ -404,6 +418,19 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.0030211806, y: -1.4737641, z: -1.5442543}
     m_Extent: {x: 0.7391123, y: 0.42591393, z: 0.4385422}
   m_DirtyAABB: 0
+--- !u!65 &8463758873684073416
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7916229538819734018}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.4782248, y: 0.85182816, z: 0.8770847}
+  m_Center: {x: -0.003021181, y: -1.4737645, z: -1.5442549}
 --- !u!1 &7916363409426138172
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,6 +604,7 @@ GameObject:
   - component: {fileID: 7892870568520981026}
   - component: {fileID: 8602263769512835173}
   - component: {fileID: 194498366867849708}
+  - component: {fileID: 3544298997773692400}
   m_Layer: 0
   m_Name: Eye R
   m_TagString: Untagged
@@ -683,6 +711,19 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
+--- !u!65 &3544298997773692400
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7916417762282082796}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9117066, y: 0.91078854, z: 0.9135453}
+  m_Center: {x: -0.000000029802326, y: 0.0009184779, z: 0}
 --- !u!1 &7916539029474024598
 GameObject:
   m_ObjectHideFlags: 0
@@ -916,6 +957,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7910833175027570650}
   - component: {fileID: 7800193632596479090}
+  - component: {fileID: 7685210738691205549}
   m_Layer: 0
   m_Name: Face
   m_TagString: Untagged
@@ -988,6 +1030,19 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.0009546876, y: -0.39544553, z: -0.07673657}
     m_Extent: {x: 1.745302, y: 2.3059452, z: 2.4221816}
   m_DirtyAABB: 0
+--- !u!65 &7685210738691205549
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7916571914481172802}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.4906044, y: 4.6118917, z: 4.844365}
+  m_Center: {x: 0.0009546877, y: -0.39544567, z: -0.0767366}
 --- !u!1 &7916686037400790954
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,6 +1054,7 @@ GameObject:
   - component: {fileID: 7914790228407318296}
   - component: {fileID: 7903255398698400380}
   - component: {fileID: 7893390624763668102}
+  - component: {fileID: 5786925239399001046}
   m_Layer: 0
   m_Name: Cap
   m_TagString: Untagged
@@ -1069,6 +1125,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &5786925239399001046
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7916686037400790954}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17803796, y: 0.31334263, z: 0.14549288}
+  m_Center: {x: -0.0011034088, y: -0.011721015, z: -0.005824361}
 --- !u!1 &7916821171629343922
 GameObject:
   m_ObjectHideFlags: 0
@@ -1568,6 +1637,7 @@ GameObject:
   - component: {fileID: 7893843935800874028}
   - component: {fileID: 1395609229347575584}
   - component: {fileID: 6305334182443678662}
+  - component: {fileID: 7941102016922476543}
   m_Layer: 0
   m_Name: Eye L
   m_TagString: Untagged
@@ -1674,6 +1744,32 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
+--- !u!65 &7941102016922476543
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7916962836677808910}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9117066, y: 0.91078854, z: 0.9135453}
+  m_Center: {x: -0.000000029802326, y: 0.0009184779, z: 0}
+--- !u!65 &465829746117453475
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8255413006400604106}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.10593429, y: 0.24999079, z: 0.2867311}
+  m_Center: {x: -0.007300742, y: -0.015315883, z: 0.043043163}
 --- !u!1001 &2312510997354553583
 PrefabInstance:
   m_ObjectHideFlags: 0

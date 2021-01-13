@@ -19,6 +19,9 @@ namespace Photon.Pun.Demo.PunBasics
 
         public enum Orientation { avertedEyes, directedEyes, naturalEyes };
         public Orientation orientation;
+        //private Orientation eyeDirectionMaster;
+
+
 
         [Header("Eye Transforms")]
         [SerializeField]
@@ -105,7 +108,70 @@ namespace Photon.Pun.Demo.PunBasics
             if (photonView.IsMine)
             {
                 this.ProcessInputs();
+                
             }
+
+            // To activate or deactivate Eye Lids
+            if (photonView.IsMine && orientation == Orientation.avertedEyes)
+            {
+                var handle3DEyeLids = GetComponent<Handle3DEyelids>();
+                handle3DEyeLids.enabled = false;
+            }
+            else if(!photonView.IsMine && orientation == Orientation.avertedEyes)
+            {
+                var handle3DEyeLids = GetComponent<Handle3DEyelids>();
+                handle3DEyeLids.enabled = false;
+            }
+            else if (photonView.IsMine && orientation == Orientation.directedEyes)
+            {
+                this.ProcessInputs();
+                var handle3DEyeLids = GetComponent<Handle3DEyelids>();
+                handle3DEyeLids.enabled = false;
+            }
+            else if (!photonView.IsMine && orientation == Orientation.directedEyes)
+            {
+                this.ProcessInputs();
+                var handle3DEyeLids = GetComponent<Handle3DEyelids>();
+                handle3DEyeLids.enabled = false;
+            }
+            else if (photonView.IsMine && orientation == Orientation.naturalEyes)
+            {
+                var handle3DEyeLids = GetComponent<Handle3DEyelids>();
+                handle3DEyeLids.enabled = true;
+            }
+            else if (!photonView.IsMine && orientation == Orientation.naturalEyes)
+            {
+                var handle3DEyeLids = GetComponent<Handle3DEyelids>();
+                handle3DEyeLids.enabled = false;
+            }
+            // ************ WORK ON THIS LATER ****************
+            //// For changing eye directions of Local player
+            //var master = PhotonNetwork.MasterClient;
+
+            //if (master.IsMasterClient)
+            //{
+            //    var eyeDirectionMaster = GetComponent<EyeDirectionMaster>();
+            //    eyeDirectionMaster.currentEyeDirection = orientation;
+            //    Debug.Log(eyeDirectionMaster.currentEyeDirection);
+            //}
+            //else if (master.IsLocal)
+            //{
+            //    var eyeDirectionMaster = GetComponent<EyeDirectionMaster>();
+            //    orientation = eyeDirectionMaster.currentEyeDirection;
+            //    Debug.Log(orientation);
+
+            //}
+
+
+            // Explore this to set eye direction in master that changes also in client
+            //PhotonNetwork.MasterClient.SetCustomProperties();
+
+
+            //if (orientation == Orientation.directedEyes)
+            //{
+            //    photonView.RPC("RPC_EyeDirectionSync", RpcTarget.All, orientation);
+            //}
+            //***********************************************************************
             if (eyeData == null)
                 return;
 
@@ -154,8 +220,8 @@ namespace Photon.Pun.Demo.PunBasics
             }
             else if (orientation == Orientation.avertedEyes)
             {
-                _leftEye.localEulerAngles = new Vector3(-16, -21, 0);
-                _rightEye.localEulerAngles = new Vector3(-16, -21, 0);
+                _leftEye.localEulerAngles = new Vector3(0, -25, 0);
+                _rightEye.localEulerAngles = new Vector3(0, -25, 0);
                 //_leftEye.localEulerAngles = new Vector3(-5, 30, 0);
 
             }
@@ -304,15 +370,35 @@ namespace Photon.Pun.Demo.PunBasics
             {
                 print("We own this player: send the others our data");
                 stream.SendNext(this.eyeData.IsLeftEyeBlinking);
+                stream.SendNext(orientation);
             }
             else
             {
                 bool status = (bool)stream.ReceiveNext();
                 print("Network player, receive data" + status);
+                
+                orientation = (Orientation)stream.ReceiveNext();
                 //this.eyeData = (TobiiXR_EyeTrackingData)stream.ReceiveNext();
+
             }
+
         }
 
         #endregion
+
+        //[PunRPC]
+
+        //private void RPC_updateEyeDirection(Orientation remoteOrientation)
+        //{
+        //    var handle3Deyes = GetComponent<Handle3DEyes>();
+        //    handle3Deyes.orientation = remoteOrientation;
+        //}
+
+        [PunRPC]
+        private void RPC_EyeDirectionSync(Orientation remoteOrientation)
+        {
+            var handle3Deyes = GetComponent<Handle3DEyes>();
+            handle3Deyes.orientation = remoteOrientation;
+        }
     }
 }
