@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using Photon.Pun;
 using Assets.LSL4Unity.Scripts.Examples;
 

@@ -11,6 +11,10 @@ using System.IO;
 using UnityEngine;
 using ViveSR.anipal.Eye;
 
+// From TriggerOpenVibe
+using System.Linq;
+using System.Net.Sockets;
+
 public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
 {
     public string fileName = "EyeTracker-S1.csv";
@@ -38,6 +42,13 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
     private float eyeOpenLeft;
     private string currentFocusObject;
     private bool spaceBar = false;
+    private int markerOpenVibe = 9999999;
+
+    // From TriggerOpenVibe
+    private static TcpClient _socketConnection1;
+    private static TcpClient _socketConnection2;
+
+
     //private EyeExpression eyeExpression;
     //private float rightEyeFrown;
     //private float leftEyeFrown;
@@ -52,10 +63,27 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
         SRanipal_Eye_API.GetEyeData(ref eyeData);
         PhotonNetwork.SendRate = 20; //20
         PhotonNetwork.SerializationRate = 5; //10
+        
+        // From TriggerOpenVibe
+        try
+        {
+            /*
+             * Connect to the OpenVibe Acquisition Server. Unless settings have been modified
+             * or you're running OpenVibe on a different machine, the address should be
+             * localhost and the port 15361. These settings are in Acquisition Server -> Preferences.
+             */
+            _socketConnection1 = new TcpClient("localhost", 15361);
+            _socketConnection2 = new TcpClient("127.0.0.1", 15361);
+            Debug.Log("Successfully connected to OpenVibe");
+        }
+        catch (SocketException se)
+        {
+            Debug.Log("Socket exception: " + se);
+        }
 
     }
 
-   
+
     // Update is called once per frame
     void Update()
     {
@@ -70,6 +98,9 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
         if (Input.GetKeyDown("space"))
         {
             photonView.RPC("RPC_SpaceBarEyeInfo", RpcTarget.All);
+
+            // Calling sendTrigger
+            SendTrigger(markerOpenVibe);
         }
 
         if (record == true)
@@ -78,11 +109,52 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    
+    // From TriggerOpenVibe
+
+    /*
+     * Call this from your experiment code to send a trigger. It can take
+     * any integer. You can have as many different trigger codes as you like.
+     */
+    private void SendTrigger(int eventId)
+    {
+        SendTrigger1(eventId);
+        SendTrigger2(eventId);
+    }
+    private void SendTrigger1(int eventId)
+    {
+        var stream = _socketConnection1.GetStream();
+
+        if (!stream.CanWrite) return;
+
+        var buffer = BitConverter.GetBytes((ulong)0);
+        var eventTag = BitConverter.GetBytes((ulong)eventId);
+
+        var sendArray = buffer.Concat(eventTag.Concat(buffer)).ToArray();
+
+        stream.Write(sendArray, 0, sendArray.Length);
+    }
+
+    private void SendTrigger2(int eventId)
+    {
+        var stream = _socketConnection2.GetStream();
+
+        if (!stream.CanWrite) return;
+
+        var buffer = BitConverter.GetBytes((ulong)0);
+        var eventTag = BitConverter.GetBytes((ulong)eventId);
+
+        var sendArray = buffer.Concat(eventTag.Concat(buffer)).ToArray();
+
+        stream.Write(sendArray, 0, sendArray.Length);
+    }
+
+    // EyeInfo Original
     private void TimeCounter()
     {
         if (timerIsRunning)
         {
-            
+
             if (timeRemaining > 0)
             {
                 SavingFile();
@@ -91,10 +163,14 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
             else
             {
                 Debug.Log("END" + counter);
+                // Calling sendTrigger
+                SendTrigger(markerOpenVibe);
                 timeRemaining = 0;
                 SavingFile();
                 timerIsRunning = false;
                 record = false;
+                // Counter for Marker
+                //markerOpenVibe += 111111;
             }
         }
 
@@ -137,7 +213,7 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
     {
         // Update eye data
         SRanipal_Eye_API.GetEyeData(ref eyeData);
-                              
+
         // Add pupil diameters (Indicator of emotion) 
         pupilDiameterRight = eyeData.verbose_data.right.pupil_diameter_mm;
         pupilDiameterLeft = eyeData.verbose_data.left.pupil_diameter_mm;
@@ -153,11 +229,11 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
 
         // Add whether eyes are open or not into a list ( How the eyes open; 0 = closed, 1 = fully opened)
         eyeOpenRight = eyeData.verbose_data.right.eye_openness;
-        eyeOpenLeft =  eyeData.verbose_data.left.eye_openness;
+        eyeOpenLeft = eyeData.verbose_data.left.eye_openness;
 
     }
     public void CheckFocus()
-    { 
+    {
         bool eyeFocus;
         if (SRanipal_Eye.Focus(GazeIndex.COMBINE, out gazeRay, out focusInfo))
         {
@@ -189,7 +265,7 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
-  
+
     public void GazeDirections()
     {
         gazeOriginRight = eyeData.verbose_data.right.gaze_origin_mm;
@@ -233,9 +309,9 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
         {
             using (var w = new StreamWriter(pathFile))
             {
-                var headers = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}", "UnixTimeStamp", "PupilDiameterRight", "PupilDiameterLeft", "PupilPositionRight(X)", "PupilPositionRight(Y)", "PupilPositionLeft(X)", "PupilPositionLeft(Y)","EyeOpenRight", "EyeOpenLeft",
+                var headers = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}", "UnixTimeStamp", "PupilDiameterRight", "PupilDiameterLeft", "PupilPositionRight(X)", "PupilPositionRight(Y)", "PupilPositionLeft(X)", "PupilPositionLeft(Y)", "EyeOpenRight", "EyeOpenLeft",
                                                                                              "GazeOriginRight(X)", "GazeOriginRight(Y)", "GazeOriginRight(Z)", "GazeOriginLeft(X)", "GazeOriginLeft(Y)", "GazeOriginLeft(Z)",
-                                                                                             "GazeDirectionRight(X)", "GazeDirectionRight(Y)", "GazeDirectionRight(Z)","GazeDirectionLeft(X)", "GazeDirectionLeft(Y)", "GazeDirectionLeft(Z)",
+                                                                                             "GazeDirectionRight(X)", "GazeDirectionRight(Y)", "GazeDirectionRight(Z)", "GazeDirectionLeft(X)", "GazeDirectionLeft(Y)", "GazeDirectionLeft(Z)",
                                                                                              "CurrentFocusObject");
 
                 w.WriteLine(headers);
@@ -245,10 +321,10 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
                     w.WriteLine("BEGIN" + counter);
                     spaceBar = false;
                 }
-                
+
                 var line = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}", unixTimeStamp, pupilDiameterRight, pupilDiameterLeft, pupilPositionRight.x, pupilPositionRight.y, pupilPositionLeft.x, pupilPositionLeft.y, eyeOpenRight, eyeOpenLeft,
                                                                                             gazeOriginRight.x, gazeOriginRight.y, gazeOriginRight.z, gazeOriginLeft.x, gazeOriginLeft.y, gazeOriginLeft.z,
-                                                                                            gazeDirectionRight.x, gazeDirectionRight.y, gazeDirectionRight.z, gazeDirectionLeft.x, gazeDirectionLeft.y, gazeDirectionLeft.z,currentFocusObject);
+                                                                                            gazeDirectionRight.x, gazeDirectionRight.y, gazeDirectionRight.z, gazeDirectionLeft.x, gazeDirectionLeft.y, gazeDirectionLeft.z, currentFocusObject);
                 w.WriteLine(line);
                 w.Flush();
 
@@ -264,6 +340,7 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
                 if (record && spaceBar == true) // Set "BEGIN" Marker (2nd, 3rd,... Markers)
                 {
                     w.WriteLine("BEGIN" + counter);
+                    // Send opening marker
                     spaceBar = false;
                 }
 
@@ -274,10 +351,12 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
                 w.WriteLine(line);
                 w.Flush();
 
-                
+
                 if (record && timeRemaining == 0) // Set "END" Marker (END1, END2,...Markers)
                 {
                     w.WriteLine("END" + counter);
+                    // Send closing marker
+
                 }
             }
         }
