@@ -275,12 +275,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileName: EyeTracker-S1.csv
-  timeTotal: 120
+  timeTotal: 60
   timeRemaining: 0
   record: 0
   timerIsRunning: 0
   timeText: 
   counter: 0
+  unixTimeStamp: 0
 --- !u!114 &177143865
 MonoBehaviour:
   m_ObjectHideFlags: 0

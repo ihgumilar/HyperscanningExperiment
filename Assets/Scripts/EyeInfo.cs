@@ -18,7 +18,7 @@ using System.Net.Sockets;
 public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
 {
     public string fileName = "EyeTracker-S1.csv";
-    public float timeTotal = 120;
+    public float timeTotal = 60;
     public float timeRemaining = 0;
     public bool record = false;
     public bool timerIsRunning = false;
@@ -97,9 +97,11 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
 
         if (Input.GetKeyDown("space"))
         {
+            Debug.Log("inside loop");
             photonView.RPC("RPC_SpaceBarEyeInfo", RpcTarget.All);
 
             // Calling sendTrigger
+            
             SendTrigger(markerOpenVibe);
         }
 
@@ -133,6 +135,8 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
         var sendArray = buffer.Concat(eventTag.Concat(buffer)).ToArray();
 
         stream.Write(sendArray, 0, sendArray.Length);
+        
+        Debug.Log(eventId); 
     }
 
     private void SendTrigger2(int eventId)
@@ -147,6 +151,9 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
         var sendArray = buffer.Concat(eventTag.Concat(buffer)).ToArray();
 
         stream.Write(sendArray, 0, sendArray.Length);
+
+        Debug.Log(eventId);
+
     }
 
     // EyeInfo Original
