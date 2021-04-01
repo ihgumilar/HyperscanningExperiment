@@ -42,13 +42,8 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
     private float eyeOpenLeft;
     private string currentFocusObject;
     private bool spaceBar = false;
-    private int markerOpenVibe = 7777777;
-
-    // From TriggerOpenVibe
-    private static TcpClient _socketConnection1;
-    private static TcpClient _socketConnection2;
-
-
+    
+   
     //private EyeExpression eyeExpression;
     //private float rightEyeFrown;
     //private float leftEyeFrown;
