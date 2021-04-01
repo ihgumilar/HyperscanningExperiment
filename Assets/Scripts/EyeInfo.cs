@@ -42,7 +42,7 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
     private float eyeOpenLeft;
     private string currentFocusObject;
     private bool spaceBar = false;
-    private int markerOpenVibe = 9999999;
+    private int markerOpenVibe = 7777777;
 
     // From TriggerOpenVibe
     private static TcpClient _socketConnection1;
@@ -64,22 +64,6 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
         PhotonNetwork.SendRate = 20; //20
         PhotonNetwork.SerializationRate = 5; //10
         
-        // From TriggerOpenVibe
-        try
-        {
-            /*
-             * Connect to the OpenVibe Acquisition Server. Unless settings have been modified
-             * or you're running OpenVibe on a different machine, the address should be
-             * localhost and the port 15361. These settings are in Acquisition Server -> Preferences.
-             */
-            _socketConnection1 = new TcpClient("localhost", 15361);
-            _socketConnection2 = new TcpClient("127.0.0.1", 15361);
-            Debug.Log("Successfully connected to OpenVibe");
-        }
-        catch (SocketException se)
-        {
-            Debug.Log("Socket exception: " + se);
-        }
 
     }
 
@@ -100,9 +84,6 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
             Debug.Log("inside loop");
             photonView.RPC("RPC_SpaceBarEyeInfo", RpcTarget.All);
 
-            // Calling sendTrigger
-            
-            SendTrigger(markerOpenVibe);
         }
 
         if (record == true)
@@ -112,50 +93,6 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     
-    // From TriggerOpenVibe
-
-    /*
-     * Call this from your experiment code to send a trigger. It can take
-     * any integer. You can have as many different trigger codes as you like.
-     */
-    private void SendTrigger(int eventId)
-    {
-        SendTrigger1(eventId);
-        SendTrigger2(eventId);
-    }
-    private void SendTrigger1(int eventId)
-    {
-        var stream = _socketConnection1.GetStream();
-
-        if (!stream.CanWrite) return;
-
-        var buffer = BitConverter.GetBytes((ulong)0);
-        var eventTag = BitConverter.GetBytes((ulong)eventId);
-
-        var sendArray = buffer.Concat(eventTag.Concat(buffer)).ToArray();
-
-        stream.Write(sendArray, 0, sendArray.Length);
-        
-        Debug.Log(eventId); 
-    }
-
-    private void SendTrigger2(int eventId)
-    {
-        var stream = _socketConnection2.GetStream();
-
-        if (!stream.CanWrite) return;
-
-        var buffer = BitConverter.GetBytes((ulong)0);
-        var eventTag = BitConverter.GetBytes((ulong)eventId);
-
-        var sendArray = buffer.Concat(eventTag.Concat(buffer)).ToArray();
-
-        stream.Write(sendArray, 0, sendArray.Length);
-
-        Debug.Log(eventId);
-
-    }
-
     // EyeInfo Original
     private void TimeCounter()
     {
@@ -170,8 +107,6 @@ public class EyeInfo : MonoBehaviourPunCallbacks, IPunObservable
             else
             {
                 Debug.Log("END" + counter);
-                // Calling sendTrigger
-                SendTrigger(markerOpenVibe);
                 timeRemaining = 0;
                 SavingFile();
                 timerIsRunning = false;
