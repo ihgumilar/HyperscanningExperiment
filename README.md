@@ -8,3 +8,5 @@
 3.2. Copy EyeInfo_CLIENT.cs to a a client PC and change the file name into Eyeinfo.cs
 3.3 There should not be in the same project for both EyeInfo.cs and EyeInfo_CLIENT.cs, because it will create a conflict.
 
+See the repository for  HyperscanningEyeGaze_2exp-CLIENT 
+for client side
